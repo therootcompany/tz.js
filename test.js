@@ -291,7 +291,7 @@ console.info("Pass: UTC to TZ for America/New_York and Asia/Colombo");
     {
         // 2021-11-07T08:15:59.000Z
         desc: "2021 Nov 7, 3:15am NY EST to UTC",
-        inputs: ["2021-11-07T03:15:59.000", "America/New_York"],
+        inputs: ["2021-11-07 03:15:59.000", "America/New_York"],
         result: "2021-11-07T03:15:59.000-0500",
     },
 
