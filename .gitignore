@@ -1,3 +1,5 @@
+*.gz
+
 # ---> Node
 # Logs
 logs

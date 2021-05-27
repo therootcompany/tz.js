@@ -1,0 +1,29 @@
+{
+  "name": "xtz",
+  "version": "1.0.0",
+  "description": "A fast, lightweight, zero-dependency library to translate between Time Zones and UTC with native Intl.DateTimeFormat in ~100 LoC. For Node.js & Browsers.",
+  "main": "xtz.js",
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/therootcompany/tz.js.git"
+  },
+  "keywords": [
+    "tz",
+    "timezone",
+    "date",
+    "intl",
+    "temporal",
+    "polyfill",
+    "convert",
+    "translate"
+  ],
+  "author": "AJ ONeal <coolaj86@gmail.com> (https://coolaj86.com/)",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/therootcompany/tz.js/issues"
+  },
+  "homepage": "https://github.com/therootcompany/tz.js#readme"
+}
