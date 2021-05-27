@@ -1,27 +1,126 @@
-/**
- * take a date of assumed timezone and convert to utc
- *
- * @param {*} d
- * @param {*} tz
- * @returns
- */
-function tzUTC(d, tz) {
-    // first calculate tz difference
-    var date = new Date();
+"use strict";
+
+function fromUTCToTimeZone(date, timeZone) {
+    // ISO string or existing date object
+    date = new Date(date);
     var options = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
+        timeZone: timeZone,
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
         hour12: false,
-        timeZone: tz
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        fractionalSecondDigits: 3,
     };
-    var tzDate = new Intl.DateTimeFormat('en-US', options).format(date)
-    var diff = date - new Date(tzDate);
-    var minutes = Math.floor((diff / 1000) / 60);
-    var localTime = new Date(d);
-    localTime.setMinutes(d.getMinutes() + minutes);
-    return localTime.toUTCString();
+
+    var tzOptions = Object.assign(
+        {
+            timeZoneName: "long",
+        },
+        options
+    );
+
+    // Every country uses the same year and months, right?
+    var formater = new Intl.DateTimeFormat("default", tzOptions);
+    var parts = formater.formatToParts(date);
+
+    var whole = {};
+    parts.forEach(function (part) {
+        var val = part.value;
+        switch (part.type) {
+            case "literal":
+                // ignore separators and whitespace characters
+                return;
+            case "timeZoneName":
+                // keep as is - it's a string
+                break;
+            case "month":
+                // months are 0-indexed for new Date()
+                val = parseInt(val, 10) - 1;
+                break;
+            case "hour":
+                // because sometimes 24 is used instead of 0, make 24 0
+                val = parseInt(val, 10) % 24;
+                break;
+            case "fractionalSecond":
+                // fractionalSecond is a dumb name - should be millisecond
+                whole.millisecond = parseInt(val, 10);
+                return;
+            default:
+                val = parseInt(val, 10);
+        }
+        // whole.month = 0;
+        whole[part.type] = val;
+    });
+
+    whole.timeZone = timeZone;
+    whole.offset = getOffset(date, whole);
+    whole.toISOString = _toOffsetISOString;
+    return whole;
 }
+
+function _toOffsetISOString() {
+    return toOffsetISOString(this);
+}
+
+function getOffset(utcDate, tzD2) {
+    var tzDate = new Date(toOffsetISOString(tzD2));
+    var diff = Math.round(tzDate.valueOf() - utcDate.valueOf()) / (60 * 1000);
+    return diff;
+}
+
+function p2(x) {
+    return String(x).padStart(2, "0");
+}
+
+function p3(x) {
+    return String(x).padStart(3, "0");
+}
+
+function formatOffset(minutes) {
+    if (!minutes) {
+        return "Z";
+    }
+
+    var h = Math.floor(Math.abs(minutes) / 60);
+    var m = Math.abs(minutes) % 60;
+    var offset = "";
+    if (minutes > 0) {
+        offset = "+";
+    } else if (minutes < 0) {
+        offset = "-";
+    }
+
+    // +0500, -0730
+    return (
+        offset + h.toString().padStart(2, "0") + m.toString().padStart(2, "0")
+    );
+}
+
+function toOffsetISOString(d) {
+    var offset = formatOffset(d.offset);
+    return (
+        `${d.year}-${p2(d.month + 1)}-${p2(d.day)}` +
+        `T${p2(d.hour)}:${p2(d.minute)}:${p2(d.second)}.${p3(
+            d.millisecond
+        )}${offset}`
+    );
+}
+
+function fromZonedToUTC(dt, tz) {}
+
+module.exports = {
+    // bespoke date =>
+    // 2021-11-07T3:15:59-0500
+    toOffsetISOString: toOffsetISOString,
+    // -240 => -0400
+    formatOffset: formatOffset,
+    // [ "2021-11-07T08:15:59Z", "America/New_York" ]
+    // => "2021-11-07T03:15:59-0500" // 2021-11-07 03:15:59
+    fromUTCToTimeZone: fromUTCToTimeZone,
+    // [ "2021-11-07 03:15:59", "America/New_York" ]
+    // => "2021-11-07T03:15:59-0500" // 2021-11-07T08:15:59Z
+    fromZonedToUTC: fromZonedToUTC,
+};

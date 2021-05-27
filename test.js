@@ -1,133 +1,145 @@
-var d = new Date("5/18/2019, 07:49:13");
-// Fri May 17 2019 17:49:13 GMT-0400 (Eastern Daylight Time)
-// utc should be Fri, 17 May 2019 21:49:13 GMT"
-// 
-console.log("d:" + d)
-console.log("tzUTC:" + tzUTC(d, 'Australia/Sydney'))
+"use strict";
 
-d = new Date("5/17/2019, 14:53:21");
-console.log("d:" + d)
+var TZ = require("./");
 
-// Fri May 17 2019 17:53:21 GMT-0400 (Eastern Daylight Time)
-// utc "Fri, 17 May 2019 21:53:21 GMT"
+// At this real UTC time, what does the timezone translate it to?
+[
+    //
+    // Start-of-DST Tests
+    //
 
-console.log("tzUTC:" + tzUTC(d, 'America/Los_Angeles'))
+    // [Start]
+    // What time is '2021-03-14 01:15:59.000 in New York' in UTC? // 2021-03-14 06:15:59.000
+    //                                                            // 2021-03-14T01:15:59.000-0500
+    // What time is '2021-03-14 02:15:59.000 in New York' in UTC? // 2021-03-14 07:15:59.000
+    //                                                            // 2021-03-14T03:15:59.000-0400
+    // What time is '2021-03-14 03:15:59.000 in New York' in UTC? // 2021-03-14 07:15:59.000
+    //                                                            // 2021-03-14T03:15:59.000-0400
+    // What time is '2021-03-14 04:15:59.000 in New York' in UTC? // 2021-03-14 08:15:59.000
+    //                                                            // 2021-03-14T04:15:59.000-0400
+    // [End]
 
+    // 12:15am NY -0500 => -0400
+    {
+        inputs: ["2021-03-14T05:15:59.000Z", "America/New_York"],
+        result: "2021-03-14T00:15:59.000-0500",
+    },
+    {
+        inputs: ["2021-03-14T00:15:59.000-0500", "America/New_York"],
+        result: "2021-03-14T00:15:59.000-0500",
+    },
+    // 1:15am NY (non-DST)
+    {
+        inputs: ["2021-03-14T06:15:59.000Z", "America/New_York"],
+        result: "2021-03-14T01:15:59.000-0500",
+    },
+    {
+        inputs: ["2021-03-14T01:15:59.000-0500", "America/New_York"],
+        result: "2021-03-14T01:15:59.000-0500",
+    },
 
-//////
-////// 9:01 twice
-//////
+    // NOTE: Can't 2:15am NY, because it does not exist (skipped by DST)
 
-var d = new Date("3/10/2019, 01:59:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-// tzUTC:Sun, 10 Mar 2019 08:59:00 GMT
+    // 3:15am NY (DST)
+    {
+        inputs: ["2021-03-14T07:15:59.000Z", "America/New_York"],
+        result: "2021-03-14T03:15:59.000-0400",
+    },
+    {
+        inputs: ["2021-03-14T03:15:59.000-0400", "America/New_York"],
+        result: "2021-03-14T03:15:59.000-0400",
+    },
+    // 4:15am NY
+    {
+        inputs: ["2021-03-14T08:15:59.000Z", "America/New_York"],
+        result: "2021-03-14T04:15:59.000-0400",
+    },
+    {
+        inputs: ["2021-03-14T04:15:59.000-0400", "America/New_York"],
+        result: "2021-03-14T04:15:59.000-0400",
+    },
 
-var d = new Date("3/10/2019, 02:01:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-// tzUTC:Sun, 10 Mar 2019 09:01:00 GMT
+    //
+    // End-of-DST Tests
+    //
 
-var d = new Date("3/10/2019, 02:59:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-// tzUTC:Sun, 10 Mar 2019 09:59:00 GMT
+    // [Start]
+    // What time is '2021-11-07 01:15:59.000 in New York' in UTC? // 2021-11-07 05:15:59.000
+    //                                                            // 2021-11-07T01:15:59.000-0400
+    //                                                            // 2021-11-07 06:15:59.000
+    //                                                            // 2021-11-07T01:15:59.000-0500
+    // What time is '2021-11-07 02:15:59.000 in New York' in UTC? // 2021-11-07 07:15:59.000
+    //                                                            // 2021-11-07T02:15:59.000-0500
+    // What time is '2021-11-07 03:15:59.000 in New York' in UTC? // 2021-11-07 08:15:59.000
+    // [End]
 
-var d = new Date("3/10/2019, 03:01:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-// tzUTC:Sun, 10 Mar 2019 09:01:00 GMT
+    // 12:15am NY -0400 => -0500
+    {
+        inputs: ["2021-11-07T04:15:59.000Z", "America/New_York"],
+        result: "2021-11-07T00:15:59.000-0400",
+    },
+    {
+        inputs: ["2021-11-07T00:15:59.000-0400", "America/New_York"],
+        result: "2021-11-07T00:15:59.000-0400",
+    },
+    // 1:15am NY (DST) -0400
+    // NOTE: 1:15am happens TWICE (with different offsets)
+    {
+        inputs: ["2021-11-07T05:15:59.000Z", "America/New_York"],
+        result: "2021-11-07T01:15:59.000-0400",
+    },
+    {
+        inputs: ["2021-11-07T01:15:59.000-0400", "America/New_York"],
+        result: "2021-11-07T01:15:59.000-0400",
+    },
+    // 1:15am NY (non-DST) -0500
+    {
+        inputs: ["2021-11-07T06:15:59.000Z", "America/New_York"],
+        result: "2021-11-07T01:15:59.000-0500",
+    },
+    {
+        inputs: ["2021-11-07T01:15:59.000-0500", "America/New_York"],
+        result: "2021-11-07T01:15:59.000-0500",
+    },
+    // 2:15am NY -0500
+    {
+        inputs: ["2021-11-07T07:15:59.000Z", "America/New_York"],
+        result: "2021-11-07T02:15:59.000-0500",
+    },
+    {
+        inputs: ["2021-11-07T02:15:59.000-0500", "America/New_York"],
+        result: "2021-11-07T02:15:59.000-0500",
+    },
+    // 3:15am NY
+    {
+        inputs: ["2021-11-07T08:15:59.000Z", "America/New_York"],
+        result: "2021-11-07T03:15:59.000-0500",
+    },
+    {
+        inputs: ["2021-11-07T03:15:59.000-0500", "America/New_York"],
+        result: "2021-11-07T03:15:59.000-0500",
+    },
 
-//////
-////// 8:01 never
-//////
+    //
+    // Positive Offset Test
+    //
 
-var d = new Date("11/03/2019, 01:59:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-// tzUTC:Sun, 03 Nov 2019 07:59:00 GMT
-
-var d = new Date("11/03/2019, 02:01:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-// tzUTC:Sun, 03 Nov 2019 09:01:00 GMT
-
-var d = new Date("11/03/2019, 02:59:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-// tzUTC:Sun, 03 Nov 2019 09:59:00 GMT
-
-var d = new Date("11/03/2019, 03:01:00");
-console.log("tzUTC:" + tzUTC(d, 'America/Denver'));
-tzUTC:Sun, 03 Nov 2019 10:01:00 GMT
-
-
-/*
-Yes, that's a major use case. And one that can contact people according to their timezone. The daylight savings problem most likely won't affect us. But it could.
-As a failsafe is there a way that you could detect daylight savings time and report it? Perhaps create 3 times and check that the difference on either side is exactly 1.5 hours?
-*/
-
-/*
-But there's a second thing, more along the lines of a scheduler:
-
-Given a target date in local time, produce the same local time a week later.
-
-"I'm having lunch with John today at 12:30 pm. Schedule a lunch next week at 12:30pm."
-
-The naive approach that almost always works is to simply add (7 x 24 x 60 x 60 x 1000), but that won't work if the lunch happened on either of these days:
-
-var d = new Date("03/07/2019, 12:30:00"); // +  (7 * 24 * 60 * 60 * 1000)
-
-var d = new Date("11/01/2019, 12:30:00"); // +  (7 * 24 * 60 * 60 * 1000)
-
-In both instances my simple calendar would be off by an hour.
-*/
-
-/*
-I think the solution will be:
-
-srcMs = toMs(srcLocalDate)
-targetMs = srcMs + diffMs
-targetLocalDate = toLocal(targetMs)
-targetMs += toMsAsIfUtc(srcLocalDate) - (toMsAsIfUtc(targetLocalDate) - diffMs)
-return toLocalDate(targetMs)
-*/
-
-(function (exports) {
-'use strict';
-
-exports.TEST = function (myfn) {
-
-  var tests = [
-    { name: "normal date"
-    , input: { d: '5/18/2019, 8:59:48 AM', tz: "America/Denver" }
-    , expected: 1558191588007
+    // 4:15am Colombo +0530 (not DST)
+    {
+        inputs: ["2021-03-14T08:15:59.000Z", "Asia/Colombo"],
+        result: "2021-03-14T13:45:59.000+0530",
+    },
+    {
+        inputs: ["2021-03-14T13:45:59.000+0530", "Asia/Colombo"],
+        result: "2021-03-14T13:45:59.000+0530",
+    },
+].forEach(function (t) {
+    var result = TZ.fromUTCToTimeZone.apply(TZ, t.inputs).toISOString();
+    if (t.result !== result) {
+        throw new Error(
+            "Invalid Conversion:\n" +
+                `\tExpected: ${t.result}\n` +
+                `\tActual: ${result}\n`
+        );
     }
-  ];
-
-  function next() {
-    var t = tests.shift();
-    var result;
-    if (!t) {
-      return true;
-    }
-    try {
-      result = Promise.resolve(myfn(t.input));
-    } catch(e) {
-      result = Promise.reject(e);
-    }
-
-    result.then(function (result) {
-      if (result === t.expected) {
-        return true;
-      }
-      throw new Error(t.name + ": result did not match expected: " + JSON.stringify(result) + " vs " + JSON.stringify(t.expected));
-    });
-  }
-
-  return next();
-};
-}('undefined' === typeof module ? window : module.exports));
-
-runner.js:
-(function (exports) {
-'use strict';
-
-var tzUtc = exports.tzUtc || require('./index.js').tzUtc;
-var tester = exports.TEST || require('./test.js').TEST;
-tester(tzUtc);
-
-}('undefined' === typeof module ? window : module.exports));
+});
