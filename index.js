@@ -1,6 +1,6 @@
 "use strict";
 
-function fromUTCToTimeZone(date, timeZone) {
+function toTimeZone(date, timeZone) {
     // ISO string or existing date object
     date = new Date(date);
     var options = {
@@ -15,12 +15,7 @@ function fromUTCToTimeZone(date, timeZone) {
         fractionalSecondDigits: 3,
     };
 
-    var tzOptions = Object.assign(
-        {
-            timeZoneName: "long",
-        },
-        options
-    );
+    var tzOptions = Object.assign({ timeZoneName: "long" }, options);
 
     // Every country uses the same year and months, right?
     var formater = new Intl.DateTimeFormat("default", tzOptions);
@@ -59,6 +54,11 @@ function fromUTCToTimeZone(date, timeZone) {
     whole.offset = getOffset(date, whole);
     whole.toISOString = _toOffsetISOString;
     return whole;
+}
+
+function toTimeZoneISOString(date, timeZone) {
+    var whole = toTimeZone(date, timeZone);
+    return toOffsetISOString(whole);
 }
 
 function _toOffsetISOString() {
@@ -109,18 +109,63 @@ function toOffsetISOString(d) {
     );
 }
 
-function fromZonedToUTC(dt, tz) {}
+function toUTC(dt, tz) {
+    if ("string" === typeof dt) {
+        // Either of these formats should work:
+        // 2021-03-14 01:15:59
+        // 2021-03-14T01:15:59Z
+        dt = dt
+            .replace("T", " ")
+            .replace("Z", "")
+            .replace(" ", "T")
+            .replace(/$/, "Z");
+    }
+    var utcDate = new Date(dt);
+    var tzD2 = toTimeZone(utcDate, tz);
+    var offset = tzD2.offset;
+    tzD2.offset = "";
+
+    var deltaDate = new Date(utcDate);
+    deltaDate.setUTCMinutes(deltaDate.getUTCMinutes() - offset);
+    var tzD3 = toTimeZone(deltaDate, tz);
+
+    if (
+        tzD3.hour === utcDate.getUTCHours() &&
+        tzD3.minute === utcDate.getUTCMinutes()
+    ) {
+        return tzD3;
+    }
+
+    var diff = tzD3.offset - offset;
+    var h = Math.floor(Math.abs(diff) / 60);
+    var m = Math.abs(diff) % 60;
+    var sign = Math.abs(diff) / diff;
+    tzD3.hour -= h * sign;
+    tzD3.minute -= m * sign;
+
+    return tzD3;
+}
+
+function toUTCISOString(date, timeZone) {
+    var whole = toUTC(date, timeZone);
+    return toOffsetISOString(whole);
+}
 
 module.exports = {
     // bespoke date =>
     // 2021-11-07T3:15:59-0500
     toOffsetISOString: toOffsetISOString,
+
     // -240 => -0400
     formatOffset: formatOffset,
+
     // [ "2021-11-07T08:15:59Z", "America/New_York" ]
     // => "2021-11-07T03:15:59-0500" // 2021-11-07 03:15:59
-    fromUTCToTimeZone: fromUTCToTimeZone,
+    toTimeZone: toTimeZone,
+    toTimeZoneISOString: toTimeZoneISOString,
+
     // [ "2021-11-07 03:15:59", "America/New_York" ]
     // => "2021-11-07T03:15:59-0500" // 2021-11-07T08:15:59Z
-    fromZonedToUTC: fromZonedToUTC,
+    toUTC: toUTC,
+    toUTCISOString: toUTCISOString,
 };
