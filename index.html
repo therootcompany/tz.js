@@ -131,13 +131,13 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
       function toUTC() {
         var curDt = $(".js-dt-tz").value;
         var curTz = $(".js-tz-tz").value;
-        $(".js-my-dt-tz").value = XTZ.toUTC(curDt, myTz).toISOString();
+        $(".js-my-dt-tz").value = XTZ.toUTC(curDt, curTz).toISOString();
       }
 
       function toTZ() {
         var curDt = $(".js-dt-utc").value;
         var curTz = $(".js-tz-utc").value;
-        $(".js-my-dt-utc").value = XTZ.toTimeZone(curDt, myTz).toISOString();
+        $(".js-my-dt-utc").value = XTZ.toTimeZone(curDt, curTz).toISOString();
       }
 
       var myTz = new Intl.DateTimeFormat("default", {}).resolvedOptions()
