@@ -98,7 +98,7 @@ See <https://therootcompany.github.io/tz.js/>.
 
 > Convert UTC into a Target Time Zone
 
-Use ISO timestamps representing the absolute UTC time in the target time zone:
+Use ISO timestamps representing the absolute UTC time (with or without offset):
 
 ```txt
 "2021-11-07T08:15:59.000Z"
