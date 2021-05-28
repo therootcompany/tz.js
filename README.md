@@ -53,6 +53,7 @@ utcDate.toISOString();
 -   [x] Translate a UTC time to a Time Zone
 -   [x] Translate a Zoned time to UTC
 -   [x] Handles **Daylight Savings**, Weird Time Zones, etc...
+    -   [x] Well-tested `npm run test`
 -   [x] Lightweight (No deps)
     -   5kb Source + Comments
     -   2.5kb Minified
