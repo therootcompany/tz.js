@@ -3,7 +3,10 @@
 A fast, lightweight, zero-dependency library to translate between Time Zones and UTC with native `Intl.DateTimeFormat`
 in ~100 LoC. For Node.js & Browsers.
 
-XTZ is a poor man's Temporal polyfill, but just for time zones.
+![](./xtz-preview.png)
+
+XTZ is a poor man's Temporal polyfill, but just for time zones. \
+Demo: <https://therootcompany.github.io/tz.js/>
 
 > What UTC time will it be when it's 3:15am in New York?
 
@@ -79,6 +82,10 @@ npm install --save xtz
 ```js
 var TZ = require("xtz");
 ```
+
+## Demo
+
+See <https://therootcompany.github.io/tz.js/>.
 
 # API
 
