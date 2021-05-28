@@ -49,7 +49,7 @@ var XTZ;
         default:
           val = parseInt(val, 10);
       }
-      // whole.month = 0;
+      // ex: whole.month = 0;
       whole[part.type] = val;
     });
 

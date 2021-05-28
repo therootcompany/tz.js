@@ -19,7 +19,7 @@ TZ.toUTCISOString("2021-11-07 03:15:59.000", "America/New_York");
 ```js
 var tzDate = TZ.toUTC("2021-11-07 03:15:59.000", "America/New_York");
 // {
-//   year: 2021, month: 11, day: 7,
+//   year: 2021, month: 10, day: 7,
 //   hour: 3, minute: 15, second: 59, millisecond: 0,
 //   offset: -300, timeZoneName: "Eastern Standard Time"
 // }
@@ -40,7 +40,7 @@ TZ.toTimeZoneISOString("2021-03-14T07:15:59.000Z", "America/New_York");
 ```js
 var utcDate = TZ.toTimeZone("2021-03-14T07:15:59.000Z", "America/New_York");
 // {
-//   year: 2021, month: 3, day: 14,
+//   year: 2021, month: 2, day: 14,
 //   hour: 3, minute: 15, second: 59, millisecond: 0,
 //   offset: -240, timeZoneName: "Eastern Daylight Time"
 // }
