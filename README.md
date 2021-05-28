@@ -1,8 +1,7 @@
 # [xtz.js](https://github.com/therootcompany/tz.js)
 
-A fast, lightweight, zero-dependency library to
-translate between Time Zones and UTC with native
-`Intl.DateTimeFormat` in ~100 LoC. For Node.js & Browsers.
+A fast, lightweight, zero-dependency library to translate between Time Zones and UTC with native `Intl.DateTimeFormat`
+in ~100 LoC. For Node.js & Browsers.
 
 XTZ is a poor man's Temporal polyfill, but just for time zones.
 
@@ -50,14 +49,14 @@ utcDate.toISOString();
 
 # Features
 
--   [x] Translate a UTC time to a Time Zone
--   [x] Translate a Zoned time to UTC
--   [x] Handles **Daylight Savings**, Weird Time Zones, etc...
-    -   [x] Well-tested `npm run test`
--   [x] Lightweight (No deps)
-    -   5kb Source + Comments
-    -   2.5kb Minified
-    -   <1kb `gzip`d
+- [x] Translate a UTC time to a Time Zone
+- [x] Translate a Zoned time to UTC
+- [x] Handles **Daylight Savings**, Weird Time Zones, etc...
+  - [x] Well-tested `npm run test`
+- [x] Lightweight (No deps)
+  - 5kb Source + Comments
+  - 2.5kb Minified
+  - <1kb `gzip`d
 
 Compatible with Browsers, and Node.js.
 
@@ -83,10 +82,10 @@ var TZ = require("xtz");
 
 # API
 
--   `toTimeZone(utcDate, timeZone)`
--   `toTimeZoneISOString(isoString, timeZone)`
--   `toUTC(dtString, timeZone)`
--   `toUTCISOString(dtString, timeZone)`
+- `toTimeZone(utcDate, timeZone)`
+- `toTimeZoneISOString(isoString, timeZone)`
+- `toUTC(dtString, timeZone)`
+- `toUTCISOString(dtString, timeZone)`
 
 ## `toTimeZone(utcDate, timeZone)`
 
@@ -115,8 +114,8 @@ You can also use a date object with an absolute UTC time:
 
 ```js
 var tzDate = TZ.toTimeZone(
-    new Date("2021-11-07T08:15:59.000Z"),
-    "America/New_York"
+  new Date("2021-11-07T08:15:59.000Z"),
+  "America/New_York"
 );
 ```
 
@@ -155,12 +154,13 @@ Or our bespoke date object:
 var utcDate = TZ.toUTC("2021-11-07 03:15:59.000", "America/New_York");
 ```
 
-You can also use a date object as the source time, but the date's UTC time will be treated as **_relative to time zone_** rather than absolute (this is a workaround for JavaScript's lack of bi-directional timezone support).
+You can also use a date object as the source time, but the date's UTC time will be treated as **_relative to time
+zone_** rather than absolute (this is a workaround for JavaScript's lack of bi-directional timezone support).
 
 ```js
 var utcDate = TZ.toUTC(
-    new Date("2021-11-07T03:15:59.000Z"),
-    "America/New_York"
+  new Date("2021-11-07T03:15:59.000Z"),
+  "America/New_York"
 );
 ```
 
@@ -173,30 +173,32 @@ utcDate.toISOString();
 
 > In 2021 Daylight Savings (in the US)
 >
-> -   begins at 2am on March 14th
-> -   ends at 2am on November 7th
+> - begins at 2am on March 14th
+> - ends at 2am on November 7th
 >
 > See <https://www.timeanddate.com/time/change/usa>.
 
 Q: What happens in March when 2am is skipped?
 
--   A: Although 2am is not a valid time, rather than throwing an error this library will resolve to 1am instead, which is an hour early in real ("tick-tock" or "monotonic") time.
-    ```js
-    var utcDate = TZ.toUTC("2021-03-14 02:15:59.000", "America/New_York");
-    utcDate.toISOString();
-    // "2021-03-14T02:15:59.000-0400"
-    // (same as "2021-03-14T01:15:59.000-0500")
-    ```
+- A: Although 2am is not a valid time, rather than throwing an error this library will resolve to 1am instead, which
+  is an hour early in real ("tick-tock" or "monotonic") time.
+  ```js
+  var utcDate = TZ.toUTC("2021-03-14 02:15:59.000", "America/New_York");
+  utcDate.toISOString();
+  // "2021-03-14T02:15:59.000-0400"
+  // (same as "2021-03-14T01:15:59.000-0500")
+  ```
 
 Q: What happens in November when 2am happens twice?
 
--   A: Although both 2ams are distinguishable with ISO offset times, only the first can be resolved from a local time with this library.
-    ```js
-    var utcDate = TZ.toUTC("2021-11-07 01:15:59.000", "America/New_York");
-    utcDate.toISOString();
-    // "2021-11-07T01:15:59.000-0400", same as "2021-11-07T05:15:59.000Z"
-    // (an hour before the 2nd 2am at "2021-11-07T01:15:59.000-0500")
-    ```
+- A: Although both 2ams are distinguishable with ISO offset times, only the first can be resolved from a local time
+  with this library.
+  ```js
+  var utcDate = TZ.toUTC("2021-11-07 01:15:59.000", "America/New_York");
+  utcDate.toISOString();
+  // "2021-11-07T01:15:59.000-0400", same as "2021-11-07T05:15:59.000Z"
+  // (an hour before the 2nd 2am at "2021-11-07T01:15:59.000-0500")
+  ```
 
 # List of Time Zones
 
