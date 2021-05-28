@@ -4,7 +4,8 @@
   "description": "A fast, lightweight, zero-dependency library to translate between Time Zones and UTC with native Intl.DateTimeFormat in ~100 LoC. For Node.js & Browsers.",
   "main": "xtz.js",
   "scripts": {
-    "test": "node ./test.js"
+    "test": "node ./test.js",
+    "build": "uglifyjs ./xtz.js > ./xtz.min.js ; gzip -k -f ./xtz.min.js"
   },
   "repository": {
     "type": "git",
