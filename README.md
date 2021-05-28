@@ -145,7 +145,7 @@ new Date("2021-11-07T03:15:59.000-0500").toISOString());
 Use ISO-like timestamps representing the _local_ time in the target time zone:
 
 ```txt
-"2021-11-0 T03:15:59.000"
+"2021-11-0 03:15:59.000"
 ```
 
 Convert directly to an offset ISO String:
