@@ -3,7 +3,7 @@
 A fast, lightweight, zero-dependency library to translate between Time Zones and UTC with native `Intl.DateTimeFormat`
 in ~100 LoC. For Node.js & Browsers.
 
-![](./xtz-preview.png)
+[![](./xtz-preview.png)](https://therootcompany.github.io/tz.js/)
 
 XTZ is a poor man's Temporal polyfill, but just for time zones. \
 Demo: <https://therootcompany.github.io/tz.js/>
