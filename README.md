@@ -58,7 +58,17 @@ utcDate.toISOString();
     -   2.5kb Minified
     -   <1kb `gzip`d
 
-Compatible with Node.js & Browsers.
+Compatible with Browsers, and Node.js.
+
+## Browsers
+
+```html
+<script src="https://unpkg.com/xtz@latest/xtz.min.js"></script>
+```
+
+```js
+var TZ = window.XTZ;
+```
 
 ## Node.js & Webpack
 
@@ -68,16 +78,6 @@ npm install --save xtz
 
 ```js
 var TZ = require("xtz");
-```
-
-## Browsers
-
-```html
-<script src="https://unpkg.com/xtz@1.0.0-rc.1/xtz.min.js"></script>
-```
-
-```js
-var TZ = window.XTZ;
 ```
 
 # API
