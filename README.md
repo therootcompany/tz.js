@@ -24,15 +24,15 @@ var tzDate = TZ.toUTC("2021-11-07 03:15:59.000", "America/New_York");
 
 tzDate.toISOString();
 // "2021-11-07T03:15:59.000-0500"
-// same as "2021-11-07T08:15:59.000Z"
+// (same as "2021-11-07T08:15:59.000Z")
 ```
 
 > What time will it be in New York when it's 7:15am UTC?
 
 ```js
 // Absolute UTC time to Relative New York time
-TZ.toTimeZoneISOString("2021-11-07T07:15:59.000Z", "America/New_York");
-// "2021-11-07T03:15:59.000-0400"
+TZ.toTimeZoneISOString("2021-03-14T07:15:59.000Z", "America/New_York");
+// "2021-03-14T03:15:59.000-0400"
 ```
 
 ```js
@@ -45,7 +45,7 @@ var utcDate = TZ.toTimeZone("2021-03-14T07:15:59.000Z", "America/New_York");
 
 utcDate.toISOString();
 // "2021-03-14T03:15:59.000-0400"
-// same as "2021-11-07T07:15:59.000Z"
+// (same as "2021-11-07T07:15:59.000Z")
 ```
 
 # Features
