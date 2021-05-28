@@ -218,6 +218,7 @@ America/New_York    -0500
 America/Denver      -0700
 America/Phoenix     -0700 (No DST)
 America/Los_Angeles -0800
+UTC                 Z
 Australia/Adelaide  +0930 (30-min, has DST)
 Asia/Kathmandu      +0545 (No DST, 45-min)
 Asia/Kolkata        +0530 (No DST, 30-min)
