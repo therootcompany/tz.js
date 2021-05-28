@@ -73,7 +73,7 @@ var TZ = require("xtz");
 ## Browsers
 
 ```html
-<script src="./xtz.js"></script>
+<script src="https://unpkg.com/xtz@1.0.0-rc.1/xtz.min.js"></script>
 ```
 
 ```js
