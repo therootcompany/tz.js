@@ -1,4 +1,4 @@
-# xtz.js
+# [xtz.js](https://github.com/therootcompany/tz.js)
 
 A fast, lightweight, zero-dependency library to
 translate between Time Zones and UTC with native
