@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Convert TimeZones in Your Browser</title>
+
+    <link rel="canonical" href="https://therootcompany.github.io/tz.js/" />
+
+    <meta name="theme-color" content="#FF00FF" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spcss@0.7.0" />
+
+    <style>
+      input {
+        width: 24em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Content -->
+    <h1>
+      <a href="https://github.com/therootcompany/tz.js" target="_blank"
+        >XTZ.js</a
+      >
+    </h1>
+
+    <h3>
+      Current Time: <span class="js-my-dt">YYYY-MM-DDThh:mm:ss.mmm+0000</span>
+    </h3>
+    Current Time Zone: <span class="js-my-tz">America/XXXX</span>
+    <br />
+    Current Time Offset: <span class="js-my-offset">-0000</span>
+    <hr />
+
+    <form class="js-tz2utc">
+      <h3>Relative TimeZone to Absolute UTC:</h3>
+      <label>
+        Time:
+        <input
+          class="js-dt-tz"
+          type="text"
+          placeholder="ex: 2021-03-14 03:15:69.000"
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        Zone:
+        <input
+          class="js-tz-tz"
+          type="text"
+          placeholder="ex: America/New_York"
+          required
+        />
+      </label>
+      <br />
+      <label>
+        ISO:
+        <input class="js-my-dt-tz" type="text" disabled />
+      </label>
+      <br />
+      <br />
+      <button type="submit">Convert to UTC!</button>
+      <br />
+    </form>
+
+    <hr />
+
+    <form class="js-utc2tz">
+      <h3>Absolute UTC to Relative TimeZone</h3>
+      <label>
+        Time:
+        <input
+          class="js-dt-utc"
+          type="text"
+          placeholder="ex: 2021-03-14 03:15:69.000"
+          required
+        />
+      </label>
+      <br />
+      <label>
+        Zone:
+        <input
+          class="js-tz-utc"
+          type="text"
+          placeholder="ex: America/New_York"
+          required
+        />
+      </label>
+      <br />
+      <label>
+        ISO:
+        <input class="js-my-dt-utc" type="text" disabled />
+      </label>
+      <br />
+      <br />
+      <button type="submit">Convert to TZ!</button>
+      <br />
+    </form>
+
+    <hr />
+    <h3>Time Zones List</h3>
+    See the
+    <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
+      >Full List of Time Zones</a
+    >
+    on Wikipedia.
+    <pre>
+America/New_York    -0500 -0400             (Eastern Time)
+America/Denver      -0700 -0600             (Mountain Time)
+America/Phoenix     -0700 (No DST)          (Arizona Time)
+America/Los_Angeles -0800 -0700             (Pacific Time)
+Australia/Adelaide  +0930 +1030    (30-min)
+Asia/Kathmandu      +0545 (No DST) (45-min)
+Asia/Kolkata        +0530 (No DST) (30-min)</pre
+    >
+    <hr />
+    Code at
+    <a href="https://github.com/therootcompany/tz.js" target="_blank"
+      >github.com/therootcompany/tz.js</a
+    >
+    <script src="./xtz.js"></script>
+    <script>
+      function $(sel, el) {
+        return (el || document.body).querySelector(sel);
+      }
+
+      function toUTC() {
+        var curDt = $(".js-dt-tz").value;
+        var curTz = $(".js-tz-tz").value;
+        $(".js-my-dt-tz").value = XTZ.toUTC(curDt, myTz).toISOString();
+      }
+
+      function toTZ() {
+        var curDt = $(".js-dt-utc").value;
+        var curTz = $(".js-tz-utc").value;
+        $(".js-my-dt-utc").value = XTZ.toTimeZone(curDt, myTz).toISOString();
+      }
+
+      var myTz = new Intl.DateTimeFormat("default", {}).resolvedOptions()
+        .timeZone;
+      $(".js-my-tz").innerText = myTz;
+      $(".js-tz-tz").value = myTz;
+      $(".js-tz-utc").value = myTz;
+      $(".js-my-offset").innerText = -1 * new Date().getTimezoneOffset();
+
+      var myDate = new Date();
+      $(".js-my-dt").innerText = XTZ.toTimeZone(myDate, myTz).toISOString();
+      $(".js-dt-tz").value = XTZ.toTimeZone(myDate, myTz)
+        .toISOString()
+        .replace("T", " ")
+        .replace(/(Z|(\+|-)\d+)$/, "");
+      $(".js-dt-utc").value = myDate.toISOString();
+
+      $("form.js-utc2tz").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        toTZ();
+      });
+      $("form.js-tz2utc").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        toUTC();
+      });
+
+      toUTC();
+      toTZ();
+    </script>
+  </body>
+</html>
