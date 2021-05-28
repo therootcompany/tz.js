@@ -5,7 +5,7 @@ in ~100 LoC. For Node.js & Browsers.
 
 [![](./xtz-preview.png)](https://therootcompany.github.io/tz.js/)
 
-XTZ is a poor man's Temporal polyfill, but just for time zones. \
+XTZ is a poor man's `Temporal` polyfill, but just for time zones. \
 Demo: <https://therootcompany.github.io/tz.js/>
 
 > What UTC time will it be when it's 3:15am in New York?
@@ -180,8 +180,8 @@ utcDate.toISOString();
 
 > In 2021 Daylight Savings (in the US)
 >
-> - begins at 2am on March 14th
-> - ends at 2am on November 7th
+> - begins at 2am on March 14th (skips to 3am)
+> - ends at 2am on November 7th (resets to 1am)
 >
 > See <https://www.timeanddate.com/time/change/usa>.
 
@@ -196,15 +196,15 @@ Q: What happens in March when 2am is skipped?
   // (same as "2021-03-14T01:15:59.000-0500")
   ```
 
-Q: What happens in November when 2am happens twice?
+Q: What happens in November when 1am happens twice?
 
-- A: Although both 2ams are distinguishable with ISO offset times, only the first can be resolved from a local time
+- A: Although both 1ams are distinguishable with ISO offset times, only the first can be resolved from a local time
   with this library.
   ```js
   var utcDate = TZ.toUTC("2021-11-07 01:15:59.000", "America/New_York");
   utcDate.toISOString();
   // "2021-11-07T01:15:59.000-0400", same as "2021-11-07T05:15:59.000Z"
-  // (an hour before the 2nd 2am at "2021-11-07T01:15:59.000-0500")
+  // (an hour before the 2nd 1am at "2021-11-07T01:15:59.000-0500")
   ```
 
 # List of Time Zones
