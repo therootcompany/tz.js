@@ -24,7 +24,8 @@ var XTZ;
     var formater = new Intl.DateTimeFormat("default", tzOptions);
     var parts = formater.formatToParts(date);
 
-    var whole = {};
+    // millisecond is explicitly 0 for iOS' lack of fractionalSecond support
+    var whole = { millisecond: 0 };
     parts.forEach(function (part) {
       var val = part.value;
       switch (part.type) {
@@ -70,7 +71,7 @@ var XTZ;
 
   function getOffset(utcDate, tzD2) {
     var tzDate = new Date(toOffsetISOString(tzD2));
-    var diff = Math.round(tzDate.valueOf() - utcDate.valueOf()) / (60 * 1000);
+    var diff = Math.round((tzDate.valueOf() - utcDate.valueOf()) / (60 * 1000));
     return diff;
   }
 
@@ -126,7 +127,7 @@ var XTZ;
     var utcDate = new Date(dt);
     var tzD2 = toTimeZone(utcDate, tz);
     var offset = tzD2.offset;
-    tzD2.offset = "";
+    tzD2.offset = 0;
 
     var deltaDate = new Date(utcDate);
     deltaDate.setUTCMinutes(deltaDate.getUTCMinutes() - offset);
