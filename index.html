@@ -36,8 +36,58 @@
     Current Time Offset: <span class="js-my-offset">-0000</span>
     <hr />
 
+    <form class="js-tz2tz">
+      <h3>Convert Between Time Zones:</h3>
+      <label>
+        Time:
+        <input
+          class="js-dt-xtz"
+          type="text"
+          placeholder="ex: 2021-03-14 03:15:69.000"
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        Input Zone:
+        <input
+          class="js-tz1-xtz"
+          type="text"
+          placeholder="ex: UTC or America/New_York"
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        Output Zone:
+        <input
+          class="js-tz2-xtz"
+          type="text"
+          placeholder="ex: America/Los_Angeles or UTC"
+          required
+        />
+      </label>
+      <br />
+
+      <label>
+        ISO:
+        <input class="js-my-dt-xtz" type="text" disabled />
+      </label>
+      <br />
+      <br />
+      <button type="submit">Convert between Zones!</button>
+      <br />
+    </form>
+
+    <hr />
+
     <form class="js-tz2utc">
       <h3>Relative TimeZone to Absolute UTC:</h3>
+      <pre><code>XTZ.toUTC("<span class="js-dtx-tz">YYYY-03-14 03:15:69.000</span>", "<span class="js-tzx-tz">UTC</span>")
+   .toISOString()
+// <span class="js-myx-dt-tz"></span></code></pre>
       <label>
         Time:
         <input
@@ -50,7 +100,7 @@
       <br />
 
       <label>
-        Zone:
+        Input Zone:
         <input
           class="js-tz-tz"
           type="text"
@@ -73,6 +123,9 @@
 
     <form class="js-utc2tz">
       <h3>Absolute UTC to Relative TimeZone</h3>
+      <pre><code>XTZ.toTimeZone("<span class="js-dtx-utc">YYYY-03-14 03:15:69.000</span>", "<span class="js-tzx-utc">UTC</span>")
+   .toISOString()
+// <span class="js-myx-dt-utc"></span></code></pre>
       <label>
         Time:
         <input
@@ -84,7 +137,7 @@
       </label>
       <br />
       <label>
-        Zone:
+        Output Zone:
         <input
           class="js-tz-utc"
           type="text"
@@ -131,16 +184,39 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
         return (el || document.body).querySelector(sel);
       }
 
+      function translate(dt, tz, tz2) {
+        var utc = new Date(XTZ.toUTC(dt, tz).toISOString());
+        if (!tz2) {
+          return utc;
+        }
+        return XTZ.toTimeZone(utc, tz2);
+      }
+
       function toUTC() {
         var curDt = $(".js-dt-tz").value;
         var curTz = $(".js-tz-tz").value;
         $(".js-my-dt-tz").value = XTZ.toUTC(curDt, curTz).toISOString();
+
+        $(".js-dtx-tz").innerText = curDt;
+        $(".js-tzx-tz").innerText = curTz;
+        $(".js-myx-dt-tz").innerText = $(".js-my-dt-tz").value;
       }
 
       function toTZ() {
         var curDt = $(".js-dt-utc").value;
         var curTz = $(".js-tz-utc").value;
         $(".js-my-dt-utc").value = XTZ.toTimeZone(curDt, curTz).toISOString();
+
+        $(".js-dtx-utc").innerText = curDt;
+        $(".js-tzx-utc").innerText = curTz;
+        $(".js-myx-dt-utc").innerText = $(".js-my-dt-utc").value;
+      }
+
+      function xTZ() {
+        var curDt = $(".js-dt-xtz").value;
+        var inTz = $(".js-tz1-xtz").value;
+        var outTz = $(".js-tz2-xtz").value;
+        $(".js-my-dt-xtz").value = translate(curDt, inTz, outTz).toISOString();
       }
 
       var myTz = new Intl.DateTimeFormat("default", {}).resolvedOptions()
@@ -148,7 +224,11 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
       $(".js-my-tz").innerText = myTz;
       $(".js-tz-tz").value = myTz;
       $(".js-tz-utc").value = myTz;
-      $(".js-my-offset").innerText = -1 * new Date().getTimezoneOffset();
+      $(".js-tz1-xtz").value = myTz;
+      $(".js-tz2-xtz").value = "Asia/Kathmandu";
+      var myOffset = -1 * new Date().getTimezoneOffset();
+      $(".js-my-offset").innerText =
+        XTZ.formatOffset(myOffset) + " (" + myOffset + ")";
 
       var myDate = new Date();
       $(".js-my-dt").innerText = XTZ.toTimeZone(myDate, myTz).toISOString();
@@ -156,6 +236,7 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
         .toISOString()
         .replace("T", " ")
         .replace(/(Z|(\+|-)\d+)$/, "");
+      $(".js-dt-xtz").value = $(".js-dt-tz").value;
       $(".js-dt-utc").value = myDate.toISOString();
 
       $("form.js-utc2tz").addEventListener("submit", function (ev) {
@@ -171,6 +252,7 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
 
       toUTC();
       toTZ();
+      xTZ();
     </script>
   </body>
 </html>
