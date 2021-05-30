@@ -126,6 +126,9 @@ var XTZ;
     }
     var utcDate = new Date(dt);
     var tzD2 = toTimeZone(utcDate, tz);
+    if ("UTC" === tz) {
+      return tzD2;
+    }
     var offset = tzD2.offset;
     tzD2.offset = 0;
 
@@ -155,6 +158,18 @@ var XTZ;
     return toOffsetISOString(whole);
   }
 
+  function translate(dt, tz, tz2) {
+    var utc = new Date(toUTC(dt, tz).toISOString());
+    if (!tz2) {
+        return utc;
+    }
+    return toTimeZone(utc, tz2);
+  }
+
+  function toISOString(dt, tz, tz2) {
+    return translate(dt, tz, tz2).toISOString();
+  }
+
   XTZ = {
     // bespoke date =>
     // 2021-11-07T3:15:59-0500
@@ -172,6 +187,10 @@ var XTZ;
     // => "2021-11-07T03:15:59-0500" // 2021-11-07T08:15:59Z
     toUTC: toUTC,
     toUTCISOString: toUTCISOString,
+
+    toISOString: toISOString,
+
+    translate: translate,
   };
 
   if ("undefined" != typeof module && module.exports) {

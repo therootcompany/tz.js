@@ -25,8 +25,26 @@ function testTzToUtc(t) {
   }
 }
 
+function testTzToTz(t) {
+  var result = TZ.translate.apply(TZ, t.inputs);
+  if (t.result !== result.toISOString()) {
+    console.log(result);
+    throw new Error(
+      `Invalid TZ to TZ conversion for ${t.desc}:\n` +
+        `\tExpected: ${t.result}\n` +
+        `\tActual: ${result.toISOString()}\n`
+    );
+  }
+}
+
 // At this real UTC time, what does the timezone translate it to?
 [
+  {
+    desc: "UTC Identity (1)",
+    inputs: ["2021-03-14T05:15:59.000Z", "UTC"],
+    result: "2021-03-14T05:15:59.000Z",
+  },
+
   //
   // Start-of-DST Tests
   //
@@ -190,6 +208,12 @@ function testTzToUtc(t) {
 console.info("Pass: UTC to TZ for America/New_York and Asia/Colombo");
 
 [
+  {
+    desc: "UTC Identity (2)",
+    inputs: ["2021-03-14 05:15:59.000", "UTC"],
+    result: "2021-03-14T05:15:59.000Z",
+  },
+
   //
   // Start-of-DST Tests
   //
@@ -314,3 +338,36 @@ console.info("Pass: UTC to TZ for America/New_York and Asia/Colombo");
   },
 ].forEach(testTzToUtc);
 console.info("Pass: TZ to UTC for America/New_York and Asia/Colombo");
+
+[
+  {
+    desc: "(Xa) UTC Identity",
+    inputs: ["2021-03-14 05:15:59.000", "UTC", "UTC"],
+    result: "2021-03-14T05:15:59.000Z",
+  },
+  {
+    desc: "(Xb) UTC to 12:15am NY EST",
+    inputs: ["2021-03-14 05:15:59.000", "UTC", "America/New_York"],
+    result: "2021-03-14T00:15:59.000-0500",
+  },
+  {
+    desc: "(Xc) 2021 Mar 14, 12:15am NY EST to UTC",
+    inputs: ["2021-03-14 00:15:59.000", "America/New_York", "UTC"],
+    result: "2021-03-14T05:15:59.000Z",
+  },
+  {
+    desc: "(Xd) Asia/Colombo to America/New_York",
+    // 2021-11-07T13:45:59.000+0530
+    // to 2021-11-07T03:15:59.000-0500
+    inputs: ["2021-11-07 13:45:59.000", "Asia/Colombo", "America/New_York"],
+    result: "2021-11-07T03:15:59.000-0500",
+  },
+  {
+    desc: "(Xe) America/New_York to Asia/Colombo",
+    // 2021-11-07T03:15:59.000-0500
+    // to 2021-11-07T13:45:59.000+0530
+    inputs: ["2021-11-07 03:15:59.000", "America/New_York", "Asia/Colombo"],
+    result: "2021-11-07T13:45:59.000+0530",
+  },
+].forEach(testTzToTz);
+console.info("Pass: TZ to TZ for America/New_York, UTC, and Asia/Colombo");

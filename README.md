@@ -5,14 +5,22 @@ in ~100 LoC. For Node.js & Browsers.
 
 [![](./xtz-preview.png)](https://therootcompany.github.io/tz.js/)
 
-XTZ is a poor man's `Temporal` polyfill, but just for time zones. \
+XTZ is a poor man's `Temporal` polyfill, but just for timezones. \
 Demo: <https://therootcompany.github.io/tz.js/>
 
 > What UTC time will it be when it's 3:15am in New York?
 
 ```js
+TZ.toISOString("2021-11-07 03:15:59.000", "UTC", "America/New_York");
+TZ.toISOString("2021-11-07 03:15:59.000", "America/New_York", "UTC");
+TZ.toISOString("2021-11-07 03:15:59.000", "America/New_York");
+TZ.toISOString("2021-11-07T03:15:59.000Z", "America/New_York");
+TZ.toISOString("2021-11-07 03:15:59.000", "America/New_York", "America/Denver");
+```
+
+```js
 // Relative New York time to Absolute UTC Time
-TZ.toUTCISOString("2021-11-07 03:15:59.000", "America/New_York");
+TZ.toISOString("2021-11-07 03:15:59.000", "America/New_York");
 // "2021-11-07T03:15:59.000-0500"
 ```
 
@@ -33,7 +41,7 @@ tzDate.toISOString();
 
 ```js
 // Absolute UTC time to Relative New York time
-TZ.toTimeZoneISOString("2021-03-14T07:15:59.000Z", "America/New_York");
+TZ.toISOString("2021-03-14 07:15:59.000", "UTC", "America/New_York");
 // "2021-03-14T03:15:59.000-0400"
 ```
 
@@ -89,12 +97,12 @@ See <https://therootcompany.github.io/tz.js/>.
 
 # API
 
-- `toTimeZone(utcDate, timeZone)`
-- `toTimeZoneISOString(isoString, timeZone)`
-- `toUTC(dtString, timeZone)`
-- `toUTCISOString(dtString, timeZone)`
+- `toTimeZone(utcDate, outputZone)`
+- `toTimeZoneISOString(isoString, outputZone)`
+- `toUTC(dtString, inputZone)`
+- `toUTCISOString(dtString, inputZone)`
 
-## `toTimeZone(utcDate, timeZone)`
+## `toTimeZone(utcDate, outputZone)`
 
 > Convert UTC into a Target Time Zone
 
@@ -138,7 +146,7 @@ new Date("2021-11-07T03:15:59.000-0500").toISOString());
 // "2021-11-07T08:15:59.000Z"
 ```
 
-## `toUTC(dtString, timeZone)`
+## `toUTC(dtString, outputZone)`
 
 > Convert a Target Time Zone into UTC
 
