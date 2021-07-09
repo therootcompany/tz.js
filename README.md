@@ -87,6 +87,15 @@ var TZ = require("xtz");
 
 See <https://therootcompany.github.io/tz.js/>.
 
+## How was this built?
+
+I live-streamed the creation of this entire project.
+
+If you'd like to learn how I did it and what challenges I encountered, you can watch here:
+https://www.youtube.com/playlist?list=PLxki0D-ilnqa6horOJ2G18WMZlJeQFlAt
+
+(though there have been a few minor updates and bug fixes off-camera)
+
 # API
 
 - `toTimeZone(utcDate, timeZone)`
