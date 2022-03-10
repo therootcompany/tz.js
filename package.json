@@ -1,6 +1,6 @@
 {
   "name": "xtz",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A fast, lightweight, zero-dependency library to translate between Time Zones and UTC with native Intl.DateTimeFormat in ~100 LoC. For Node.js & Browsers.",
   "main": "xtz.js",
   "scripts": {
