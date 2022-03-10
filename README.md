@@ -9,17 +9,17 @@ XTZ is a poor man's `Temporal` polyfill, but just for time zones. \
 Demo: <https://therootcompany.github.io/tz.js/>
 
 ```js
-// What's the current time, in ISO format?
+// What's the current time, in ISO+Offset format?
 
 TZ.toLocalISOString(new Date()); // "2021-11-07T03:15:59.000-0500"
 TZ.timeZone(); // "America/New_York"
 ```
 
 ```js
-// What will the ISO datetime string be
+// What will the ISO+Offset datetime string be
 // when it's 3:15am in New York?
 //
-// (Relative New York time to Absolute UTC Time)
+// (Relative New York time to Absolute ISO+Offset Time)
 
 TZ.toOffsetISOString("2021-11-07 03:15:59.000", "America/New_York");
 // "2021-11-07T03:15:59.000-0500"
@@ -29,7 +29,7 @@ TZ.toOffsetISOString("2021-11-07 03:15:59.000", "America/New_York");
 // What time will it be in New York
 // when it's 7:15am UTC?
 //
-// (Absolute UTC time to Relative New York time)
+// (Absolute UTC Zulu time to Relative New York time)
 
 TZ.toTimeZoneISOString("2021-03-14T07:15:59.000Z", "America/New_York");
 // "2021-03-14T03:15:59.000-0400"
@@ -37,8 +37,8 @@ TZ.toTimeZoneISOString("2021-03-14T07:15:59.000Z", "America/New_York");
 
 # Features
 
-- [x] Translate a UTC time to a Time Zone
-- [x] Translate a Zoned time to UTC
+- [x] Translate a UTC Zulu time to a Time Zone
+- [x] Translate a Zoned time to ISO+Offset
 - [x] Handles **Daylight Savings**, Weird Time Zones, etc...
   - [x] Well-tested `npm run test`
 - [x] Lightweight (No deps)
@@ -93,7 +93,7 @@ https://www.youtube.com/playlist?list=PLxki0D-ilnqa6horOJ2G18WMZlJeQFlAt
 
 > Convert UTC into a Target Time Zone
 
-Use ISO timestamps representing the absolute UTC time (with or without offset):
+Use ISO timestamps representing the absolute UTC time (ISO with or without offset):
 
 ```txt
 "2021-11-07T08:15:59.000Z"
@@ -125,7 +125,7 @@ TZ.toTimeZoneISOString("2021-11-07T08:15:59.000Z", "America/New_York");
 var tzDate = TZ.toTimeZone("2021-11-07T08:15:59.000Z", "America/New_York");
 ```
 
-### You can also use a date object with an absolute UTC time:
+### You can also use a date object with an absolute ISO time:
 
 ```js
 var tzDate = TZ.toTimeZone(
@@ -148,7 +148,7 @@ new Date("2021-11-07T03:15:59.000-0500").toISOString());
 
 ## `fromTimeZone(dtString, timeZone)`
 
-> Convert a Target Time Zone into UTC
+> Convert a Target Time Zone into ISO
 
 Use ISO-like timestamps representing the _local_ time in the target time zone:
 
