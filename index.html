@@ -99,8 +99,8 @@ String(((new Date()).getTimezoneOffset() % 60)).padStart(2, '0')</code></pre>
     <hr />
 
     <form class="js-tz2utc">
-      <h3>Relative TimeZone to Absolute UTC:</h3>
-      <pre><code>XTZ.toUTC("<span class="js-dtx-tz">YYYY-03-14 03:15:69.000</span>", "<span class="js-tzx-tz">UTC</span>")
+      <h3>TimeZone-Relative (Local) to Absolute (ISO+Offset) String:</h3>
+      <pre><code>XTZ.fromTimeZone("<span class="js-dtx-tz">YYYY-03-14 03:15:69.000</span>", "<span class="js-tzx-tz">UTC</span>")
    .toISOString()
 // <span class="js-myx-dt-tz"></span></code></pre>
       <label>
@@ -130,14 +130,14 @@ String(((new Date()).getTimezoneOffset() % 60)).padStart(2, '0')</code></pre>
       </label>
       <br />
       <br />
-      <button type="submit">Convert to UTC!</button>
+      <button type="submit">Convert to ISO+Offset!</button>
       <br />
     </form>
 
     <hr />
 
     <form class="js-utc2tz">
-      <h3>Absolute UTC to Relative TimeZone</h3>
+      <h3>Absolute (UTC) to TimeZone-Relative (ISO+Offset) String:</h3>
       <pre><code>XTZ.toTimeZone("<span class="js-dtx-utc">YYYY-03-14 03:15:69.000</span>", "<span class="js-tzx-utc">UTC</span>")
    .toISOString()
 // <span class="js-myx-dt-utc"></span></code></pre>
@@ -201,17 +201,17 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
       }
 
       function translate(dt, tz, tz2) {
-        var utc = new Date(XTZ.toUTC(dt, tz).toISOString());
+        var utc = new Date(XTZ.fromTimeZone(dt, tz).toISOString());
         if (!tz2) {
           return utc;
         }
         return XTZ.toTimeZone(utc, tz2);
       }
 
-      function toUTC() {
+      function fromTimeZone() {
         var curDt = $(".js-dt-tz").value;
         var curTz = $(".js-tz-tz").value;
-        $(".js-my-dt-tz").value = XTZ.toUTC(curDt, curTz).toISOString();
+        $(".js-my-dt-tz").value = XTZ.fromTimeZone(curDt, curTz).toISOString();
 
         $(".js-dtx-tz").innerText = curDt;
         $(".js-tzx-tz").innerText = curTz;
@@ -265,10 +265,10 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
       $("form.js-tz2utc").addEventListener("submit", function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        toUTC();
+        fromTimeZone();
       });
 
-      toUTC();
+      fromTimeZone();
       toTZ();
       xTZ();
     </script>

@@ -1,6 +1,4 @@
-var XTZ;
-
-(function () {
+(function (exports) {
   "use strict";
 
   function toTimeZone(date, timeZone) {
@@ -62,15 +60,16 @@ var XTZ;
 
   function toTimeZoneISOString(date, timeZone) {
     var whole = toTimeZone(date, timeZone);
-    return toOffsetISOString(whole);
+    return formatAsOffsetISOString(whole);
   }
 
   function _toOffsetISOString() {
-    return toOffsetISOString(this);
+    /* jshint validthis: true */
+    return formatAsOffsetISOString(this);
   }
 
   function getOffset(utcDate, tzD2) {
-    var tzDate = new Date(toOffsetISOString(tzD2));
+    var tzDate = new Date(formatAsOffsetISOString(tzD2));
     var diff = Math.round((tzDate.valueOf() - utcDate.valueOf()) / (60 * 1000));
     return diff;
   }
@@ -98,10 +97,21 @@ var XTZ;
     }
 
     // +0500, -0730
-    return offset + p2(h) + p2(m);
+    return (
+      offset + h.toString().padStart(2, "0") + m.toString().padStart(2, "0")
+    );
   }
 
-  function toOffsetISOString(d) {
+  function toOffsetISOString(date, timeZone) {
+    if ("offset" in date && "year" in date) {
+      return formatAsOffsetISOString(date);
+    }
+
+    var whole = fromTimeZone(date, timeZone);
+    return formatAsOffsetISOString(whole);
+  }
+
+  function formatAsOffsetISOString(d) {
     var offset = formatOffset(d.offset);
     return (
       `${d.year}-${p2(d.month + 1)}-${p2(d.day)}` +
@@ -111,7 +121,7 @@ var XTZ;
     );
   }
 
-  function toUTC(dt, tz) {
+  function fromTimeZone(dt, tz) {
     if ("string" === typeof dt) {
       // Either of these formats should work:
       // 2021-03-14 01:15:59
@@ -148,11 +158,6 @@ var XTZ;
     return tzD3;
   }
 
-  function toUTCISOString(date, timeZone) {
-    var whole = toUTC(date, timeZone);
-    return toOffsetISOString(whole);
-  }
-
   function toLocalISOString(dateOrStr) {
     var d;
     if (dateOrStr) {
@@ -174,15 +179,17 @@ var XTZ;
     return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}.${sss}${offset}`;
   }
 
-  XTZ = {
+  exports.XTZ = {
     // bespoke date =>
     // 2021-11-07T3:15:59-0500
+    // (todo?)
+    // xtzToISOString: formatAsOffsetISOString,
+    // (deprecated)
     toOffsetISOString: toOffsetISOString,
 
     // -240 => -0400
     formatOffset: formatOffset,
 
-    // new Date() => "2021-11-07T03:15:59-0500"
     toLocalISOString: toLocalISOString,
 
     // [ "2021-11-07T08:15:59Z", "America/New_York" ]
@@ -192,11 +199,13 @@ var XTZ;
 
     // [ "2021-11-07 03:15:59", "America/New_York" ]
     // => "2021-11-07T03:15:59-0500" // 2021-11-07T08:15:59Z
-    toUTC: toUTC,
-    toUTCISOString: toUTCISOString,
+    toUTC: fromTimeZone,
+    fromTimeZone: fromTimeZone,
+    // deprecated
+    toUTCISOString: toOffsetISOString,
   };
 
   if ("undefined" != typeof module && module.exports) {
-    module.exports = XTZ;
+    module.exports = exports.XTZ;
   }
-})();
+})(("undefined" === typeof module && window) || exports);

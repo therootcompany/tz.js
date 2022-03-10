@@ -15,46 +15,24 @@ TZ.toLocalISOString(new Date()); // "2021-11-07T03:15:59.000-0500"
 TZ.timeZone(); // "America/New_York"
 ```
 
-> What UTC time will it be when it's 3:15am in New York?
-
 ```js
-// Relative New York time to Absolute UTC Time
-TZ.toUTCISOString("2021-11-07 03:15:59.000", "America/New_York");
+// What will the ISO datetime string be
+// when it's 3:15am in New York?
+//
+// (Relative New York time to Absolute UTC Time)
+
+TZ.toOffsetISOString("2021-11-07 03:15:59.000", "America/New_York");
 // "2021-11-07T03:15:59.000-0500"
 ```
 
 ```js
-var tzDate = TZ.toUTC("2021-11-07 03:15:59.000", "America/New_York");
-// {
-//   year: 2021, month: 10, day: 7,
-//   hour: 3, minute: 15, second: 59, millisecond: 0,
-//   offset: -300, timeZoneName: "Eastern Standard Time"
-// }
+// What time will it be in New York
+// when it's 7:15am UTC?
+//
+// (Absolute UTC time to Relative New York time)
 
-tzDate.toISOString();
-// "2021-11-07T03:15:59.000-0500"
-// (same as "2021-11-07T08:15:59.000Z")
-```
-
-> What time will it be in New York when it's 7:15am UTC?
-
-```js
-// Absolute UTC time to Relative New York time
 TZ.toTimeZoneISOString("2021-03-14T07:15:59.000Z", "America/New_York");
 // "2021-03-14T03:15:59.000-0400"
-```
-
-```js
-var utcDate = TZ.toTimeZone("2021-03-14T07:15:59.000Z", "America/New_York");
-// {
-//   year: 2021, month: 2, day: 14,
-//   hour: 3, minute: 15, second: 59, millisecond: 0,
-//   offset: -240, timeZoneName: "Eastern Daylight Time"
-// }
-
-utcDate.toISOString();
-// "2021-03-14T03:15:59.000-0400"
-// (same as "2021-11-07T07:15:59.000Z")
 ```
 
 # Features
@@ -108,8 +86,8 @@ https://www.youtube.com/playlist?list=PLxki0D-ilnqa6horOJ2G18WMZlJeQFlAt
 - `toLocalISOString(dateOrNull)`
 - `toTimeZone(utcDate, timeZone)`
 - `toTimeZoneISOString(isoString, timeZone)`
-- `toUTC(dtString, timeZone)`
-- `toUTCISOString(dtString, timeZone)`
+- `fromTimeZone(dtString, timeZone)`
+- `toOffsetISOString(dtString, timeZone)`
 
 ## `toTimeZone(utcDate, timeZone)`
 
@@ -121,20 +99,33 @@ Use ISO timestamps representing the absolute UTC time (with or without offset):
 "2021-11-07T08:15:59.000Z"
 ```
 
-Convert directly to an ISO String:
+```js
+var utcDate = TZ.toTimeZone("2021-03-14T07:15:59.000Z", "America/New_York");
+// {
+//   year: 2021, month: 2, day: 14,
+//   hour: 3, minute: 15, second: 59, millisecond: 0,
+//   offset: -240, timeZoneName: "Eastern Daylight Time"
+// }
+
+utcDate.toISOString();
+// "2021-03-14T03:15:59.000-0400"
+// (same as "2021-11-07T07:15:59.000Z")
+```
+
+### Convert directly to an ISO String:
 
 ```js
 TZ.toTimeZoneISOString("2021-11-07T08:15:59.000Z", "America/New_York");
 // "2021-11-07T03:15:59.000-0500"
 ```
 
-Or use our bespoke (custom) date object:
+### Or use our bespoke (custom) date object:
 
 ```js
 var tzDate = TZ.toTimeZone("2021-11-07T08:15:59.000Z", "America/New_York");
 ```
 
-You can also use a date object with an absolute UTC time:
+### You can also use a date object with an absolute UTC time:
 
 ```js
 var tzDate = TZ.toTimeZone(
@@ -148,14 +139,14 @@ console.log(tzDate.toISOString());
 // "2021-11-07T03:15:59.000-0500"
 ```
 
-Our ISO Strings + Offsets work with JavaScript's native Date object!!
+### Our ISO Strings + Offsets work with JavaScript's native Date object!!
 
 ```js
 new Date("2021-11-07T03:15:59.000-0500").toISOString());
 // "2021-11-07T08:15:59.000Z"
 ```
 
-## `toUTC(dtString, timeZone)`
+## `fromTimeZone(dtString, timeZone)`
 
 > Convert a Target Time Zone into UTC
 
@@ -165,24 +156,39 @@ Use ISO-like timestamps representing the _local_ time in the target time zone:
 "2021-11-0 03:15:59.000"
 ```
 
-Convert directly to an offset ISO String:
+```js
+var tzDate = TZ.fromTimeZone("2021-11-07 03:15:59.000", "America/New_York");
+// {
+//   year: 2021, month: 10, day: 7,
+//   hour: 3, minute: 15, second: 59, millisecond: 0,
+//   offset: -300, timeZoneName: "Eastern Standard Time"
+// }
+
+tzDate.toISOString();
+// "2021-11-07T03:15:59.000-0500"
+// (same as "2021-11-07T08:15:59.000Z")
+```
+
+### Convert directly to an offset ISO String:
 
 ```js
-TZ.toUTCISOString("2021-11-07 03:15:59.000", "America/New_York");
+TZ.toOffsetISOString("2021-11-07 03:15:59.000", "America/New_York");
 // "2021-11-07T03:15:59.000-0500"
 ```
 
-Or our bespoke date object:
+### Or our bespoke date object:
 
 ```js
-var utcDate = TZ.toUTC("2021-11-07 03:15:59.000", "America/New_York");
+var utcDate = TZ.fromTimeZone("2021-11-07 03:15:59.000", "America/New_York");
 ```
+
+### Use a Date as a source time
 
 You can also use a date object as the source time, but the date's UTC time will be treated as **_relative to time
 zone_** rather than absolute (this is a workaround for JavaScript's lack of bi-directional timezone support).
 
 ```js
-var utcDate = TZ.toUTC(
+var utcDate = TZ.fromTimeZone(
   new Date("2021-11-07T03:15:59.000Z"),
   "America/New_York"
 );
@@ -207,7 +213,7 @@ Q: What happens in March when 2am is skipped?
 - A: Although 2am is not a valid time, rather than throwing an error this library will resolve to 1am instead, which
   is an hour early in real ("tick-tock" or "monotonic") time.
   ```js
-  var utcDate = TZ.toUTC("2021-03-14 02:15:59.000", "America/New_York");
+  var utcDate = TZ.fromTimeZone("2021-03-14 02:15:59.000", "America/New_York");
   utcDate.toISOString();
   // "2021-03-14T02:15:59.000-0400"
   // (same as "2021-03-14T01:15:59.000-0500")
@@ -218,7 +224,7 @@ Q: What happens in November when 1am happens twice?
 - A: Although both 1ams are distinguishable with ISO offset times, only the first can be resolved from a local time
   with this library.
   ```js
-  var utcDate = TZ.toUTC("2021-11-07 01:15:59.000", "America/New_York");
+  var utcDate = TZ.fromTimeZone("2021-11-07 01:15:59.000", "America/New_York");
   utcDate.toISOString();
   // "2021-11-07T01:15:59.000-0400", same as "2021-11-07T05:15:59.000Z"
   // (an hour before the 2nd 1am at "2021-11-07T01:15:59.000-0500")
