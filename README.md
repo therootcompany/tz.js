@@ -8,6 +8,13 @@ in ~100 LoC. For Node.js & Browsers.
 XTZ is a poor man's `Temporal` polyfill, but just for time zones. \
 Demo: <https://therootcompany.github.io/tz.js/>
 
+```js
+// What's the current time, in ISO format?
+
+TZ.toLocalISOString(new Date()); // "2021-11-07T03:15:59.000-0500"
+TZ.timeZone(); // "America/New_York"
+```
+
 > What UTC time will it be when it's 3:15am in New York?
 
 ```js
@@ -98,6 +105,7 @@ https://www.youtube.com/playlist?list=PLxki0D-ilnqa6horOJ2G18WMZlJeQFlAt
 
 # API
 
+- `toLocalISOString(dateOrNull)`
 - `toTimeZone(utcDate, timeZone)`
 - `toTimeZoneISOString(isoString, timeZone)`
 - `toUTC(dtString, timeZone)`

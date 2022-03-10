@@ -98,9 +98,7 @@ var XTZ;
     }
 
     // +0500, -0730
-    return (
-      offset + h.toString().padStart(2, "0") + m.toString().padStart(2, "0")
-    );
+    return offset + p2(h) + p2(m);
   }
 
   function toOffsetISOString(d) {
@@ -155,6 +153,27 @@ var XTZ;
     return toOffsetISOString(whole);
   }
 
+  function toLocalISOString(dateOrStr) {
+    var d;
+    if (dateOrStr) {
+      d = new Date(dateOrStr);
+    } else {
+      d = new Date();
+    }
+
+    var YYYY = d.getFullYear();
+    var MM = p2(d.getMonth() + 1);
+    var DD = p2(d.getDate());
+    var hh = p2(d.getHours());
+    var mm = p2(d.getMinutes());
+    var ss = p2(d.getSeconds());
+    var sss = d.getMilliseconds().toString().padStart(3, "0");
+
+    var offset = formatOffset(-d.getTimezoneOffset());
+
+    return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}.${sss}${offset}`;
+  }
+
   XTZ = {
     // bespoke date =>
     // 2021-11-07T3:15:59-0500
@@ -162,6 +181,9 @@ var XTZ;
 
     // -240 => -0400
     formatOffset: formatOffset,
+
+    // new Date() => "2021-11-07T03:15:59-0500"
+    toLocalISOString: toLocalISOString,
 
     // [ "2021-11-07T08:15:59Z", "America/New_York" ]
     // => "2021-11-07T03:15:59-0500" // 2021-11-07 03:15:59
