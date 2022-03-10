@@ -15,7 +15,8 @@ function testUtcToTz(t) {
 
 function testTzToUtc(t) {
   var result = TZ.toUTC.apply(TZ, t.inputs);
-  if (t.result !== result.toISOString()) {
+  var result2 = TZ.fromTimeZone.apply(TZ, t.inputs);
+  if (t.result !== result.toISOString() || t.result !== result2.toISOString()) {
     console.log(result);
     throw new Error(
       `Invalid TZ to UTC conversion for ${t.desc}:\n` +
@@ -187,7 +188,9 @@ function testTzToUtc(t) {
     result: "2021-11-07T13:45:59.000+0530",
   },
 ].forEach(testUtcToTz);
-console.info("Pass: UTC/ISO+Offset to TZ for America/New_York and Asia/Colombo");
+console.info(
+  "Pass: UTC/ISO+Offset to TZ for America/New_York and Asia/Colombo"
+);
 
 [
   //

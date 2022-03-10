@@ -22,9 +22,9 @@ var XTZ;
     console.info();
 
     console.info("\t// during daylight savings");
-    console.info(`\tXTZ.toUTC("2021-03-14 08:15:59.000", "America/New_York")`);
+    console.info(`\tXTZ.fromTimeZone("2021-03-14 08:15:59.000", "America/New_York")`);
     console.info(`\ttzDate.toISOString()`);
-    tzDate = XTZ.toUTC("2021-03-14 08:15:59.000", "America/New_York");
+    tzDate = XTZ.fromTimeZone("2021-03-14 08:15:59.000", "America/New_York");
     console.info(
       "\t" + tzDate.toISOString(),
       "// same as",
@@ -33,9 +33,9 @@ var XTZ;
     console.info();
 
     console.info("\t// during standard time");
-    console.info(`\tXTZ.toUTC("2021-11-07 08:15:59.000", "America/New_York")`);
+    console.info(`\tXTZ.fromTimeZone("2021-11-07 08:15:59.000", "America/New_York")`);
     console.info(`\ttzDate.toISOString()`);
-    tzDate = XTZ.toUTC("2021-11-07 08:15:59.000", "America/New_York");
+    tzDate = XTZ.fromTimeZone("2021-11-07 08:15:59.000", "America/New_York");
     console.info(
       "\t" + tzDate.toISOString(),
       "// same as",
@@ -65,9 +65,9 @@ var XTZ;
     console.info();
 
     console.info("\t// during standard time");
-    console.info(`\tXTZ.toUTC("2021-11-07T08:15:59.000Z", "America/New_York")`);
+    console.info(`\tXTZ.fromTimeZone("2021-11-07T08:15:59.000Z", "America/New_York")`);
     console.info(`\ttzDate.toISOString()`);
-    tzDate = XTZ.toUTC("2021-11-07T08:15:59.000Z", "America/New_York");
+    tzDate = XTZ.fromTimeZone("2021-11-07T08:15:59.000Z", "America/New_York");
     console.info(
       "\t" + tzDate.toISOString(),
       "// same as",
