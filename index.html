@@ -83,6 +83,18 @@
 
     <hr />
 
+    <form class="js-local">
+      <h3>Local ISO+Offset String:</h3>
+      <pre><code>XTZ.toLocalISOString(new Date())</code></pre>
+      <label>
+        ISO:
+        <input class="js-my-dt-local" type="text" disabled />
+      </label>
+      <br />
+    </form>
+
+    <hr />
+
     <form class="js-tz2utc">
       <h3>Relative TimeZone to Absolute UTC:</h3>
       <pre><code>XTZ.toUTC("<span class="js-dtx-tz">YYYY-03-14 03:15:69.000</span>", "<span class="js-tzx-tz">UTC</span>")
@@ -179,6 +191,7 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
       >github.com/therootcompany/tz.js</a
     >
     <script src="./xtz.js"></script>
+    <script src="./tolocalisostring.js"></script>
     <script>
       function $(sel, el) {
         return (el || document.body).querySelector(sel);
@@ -218,6 +231,8 @@ Asia/Kolkata        +0530 (No DST) (30-min)</pre
         var outTz = $(".js-tz2-xtz").value;
         $(".js-my-dt-xtz").value = translate(curDt, inTz, outTz).toISOString();
       }
+
+      $(".js-my-dt-local").value = XTZ.toLocalISOString();
 
       var myTz = new Intl.DateTimeFormat("default", {}).resolvedOptions()
         .timeZone;
