@@ -103,7 +103,7 @@
   }
 
   function toOffsetISOString(date, timeZone) {
-    if ("offset" in date && "year" in date) {
+    if ("object" === typeof date && "offset" in date && "year" in date) {
       return formatAsOffsetISOString(date);
     }
 
@@ -179,6 +179,10 @@
     return `${YYYY}-${MM}-${DD}T${hh}:${mm}:${ss}.${sss}${offset}`;
   }
 
+  function getTimeZone() {
+    return new Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
+
   exports.XTZ = {
     // bespoke date =>
     // 2021-11-07T3:15:59-0500
@@ -190,6 +194,9 @@
     // -240 => -0400
     formatOffset: formatOffset,
 
+    // "America/New_York"
+    timeZone: getTimeZone,
+    // "2021-11-07T03:15:59-0500"
     toLocalISOString: toLocalISOString,
 
     // [ "2021-11-07T08:15:59Z", "America/New_York" ]

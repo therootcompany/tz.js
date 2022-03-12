@@ -4,7 +4,8 @@ var TZ = require("./");
 
 function testUtcToTz(t) {
   var result = TZ.toTimeZone.apply(TZ, t.inputs).toISOString();
-  if (t.result !== result) {
+  var result2 = TZ.toTimeZoneISOString.apply(TZ, t.inputs);
+  if (result !== result2 || t.result !== result) {
     throw new Error(
       `Invalid UTC/ISO+Offset to TZ conversion for ${t.desc}:\n` +
         `\tExpected: ${t.result}\n` +
@@ -14,10 +15,11 @@ function testUtcToTz(t) {
 }
 
 function testTzToUtc(t) {
-  var result = TZ.toUTC.apply(TZ, t.inputs);
-  var result2 = TZ.fromTimeZone.apply(TZ, t.inputs);
-  if (t.result !== result.toISOString() || t.result !== result2.toISOString()) {
-    console.log(result);
+  var result = TZ.fromTimeZone.apply(TZ, t.inputs).toISOString();
+  var result2 = TZ.toOffsetISOString.apply(TZ, t.inputs);
+  var result3 = TZ.toUTC.apply(TZ, t.inputs).toISOString();
+  if (t.result !== result || t.result !== result2 || t.result !== result3) {
+    console.error(result);
     throw new Error(
       `Invalid TZ to UTC conversion for ${t.desc}:\n` +
         `\tExpected: ${t.result}\n` +
@@ -317,3 +319,16 @@ console.info(
   },
 ].forEach(testTzToUtc);
 console.info("Pass: TZ to UTC for America/New_York and Asia/Colombo");
+
+var localISOString = TZ.toLocalISOString();
+var reISOString = /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d\d\d[+-]\d\d\d\d$/;
+if (!reISOString.test(localISOString)) {
+  throw new Error("Couldn't get local time as iso+offset");
+}
+console.info("Pass: can get local time as ISO+Offset");
+
+var tzName = TZ.timeZone();
+if (!/^[A-Z]\w+\/[A-Z]\w+$/.test(tzName)) {
+  throw new Error("Couldn't get local Time Zone");
+}
+console.info("Pass: can get local timezone");
